@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">VK News</string>
+    <string name="avatar">avatar</string>
+    <string name="group_name">Dogs Club</string>
+    <string name="time">14:00</string>
+    <string name="icon_button_more_vert">icon button more vert</string>
+    <string name="main_content">"У меня есть щенок. Его зовут Барбос. Он красивый, добрый и верный. Мы любим бегать по двору и играть. Он спит на коврике в коридоре со своей любимой игрушкой — зайцем. Я люблю его кормить. Барбос кушает специальный корм для собак. Моя собака — самая лучшая, я никому не дам её в обиду. "</string>
+    <string name="image_akita_inu">image akita-inu</string>
+    <string name="image">image</string>
 </resources>
