@@ -22,18 +22,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             VKNewsTheme {
-                MainText()
+                CardPost()
             }
         }
     }
 }
 
-@Composable
-fun MainText() {
-    Card(
-        elevation = CardDefaults.cardElevation(4.dp),
-        modifier = Modifier.fillMaxSize().padding(16.dp)
-    ) {
-        Text(text = "FIRST CHANGE")
-    }
-}
