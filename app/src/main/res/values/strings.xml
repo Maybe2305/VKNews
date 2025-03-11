@@ -7,4 +7,7 @@
     <string name="main_content">"У меня есть щенок. Его зовут Барбос. Он красивый, добрый и верный. Мы любим бегать по двору и играть. Он спит на коврике в коридоре со своей любимой игрушкой — зайцем. Я люблю его кормить. Барбос кушает специальный корм для собак. Моя собака — самая лучшая, я никому не дам её в обиду. "</string>
     <string name="image_akita_inu">image akita-inu</string>
     <string name="image">image</string>
+    <string name="bottom_bar_item_home">Главная</string>
+    <string name="bottom_bar_item_favourite">Избранное</string>
+    <string name="bottom_bar_item_profile">Профиль</string>
 </resources>
