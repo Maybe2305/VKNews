@@ -6,6 +6,7 @@ import androidx.compose.ui.res.stringResource
 import com.may.vknews.R
 
 data class Post(
+    val id: Int,
     val groupName: Int = R.string.group_name,
     val avatarImageResId: Int = R.drawable.bigel,
     val publicationDate: Int = R.string.time,

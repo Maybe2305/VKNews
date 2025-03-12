@@ -8,11 +8,18 @@ import com.may.vknews.domain.StatisticsItem
 
 class MainViewModel : ViewModel() {
 
-    private val _postState = MutableLiveData(Post())
-    val postState: LiveData<Post> = _postState
+    private val sourceList = mutableListOf<Post>().apply {
+        repeat(10) {
+            add(Post(id = it))
+        }
+    }
 
-    fun updateCountStatisticItem(item: StatisticsItem) {
-        val oldStatistics = _postState.value?.statistics ?: throw IllegalStateException()
+    private val _posts = MutableLiveData<List<Post>>(sourceList)
+    val posts: LiveData<List<Post>> = _posts
+
+    fun updateCountStatisticItem(post: Post, item: StatisticsItem) {
+        val oldPosts = _posts.value?.toMutableList() ?: mutableListOf()
+        val oldStatistics = post.statistics
         val newStatistics = oldStatistics.toMutableList().apply {
             replaceAll { oldItem ->
                 if (oldItem.type == item.type) {
@@ -22,6 +29,21 @@ class MainViewModel : ViewModel() {
                 }
             }
         }
-        _postState.value = postState.value?.copy(statistics = newStatistics)
+        val newPost = post.copy(statistics = newStatistics)
+        _posts.value = oldPosts.apply {
+            replaceAll {
+                if (it.id == newPost.id) {
+                    newPost
+                } else {
+                    it
+                }
+            }
+        }
+    }
+
+    fun remove(post: Post) {
+        val oldPosts = _posts.value?.toMutableList() ?: mutableListOf()
+        oldPosts.remove(post)
+        _posts.value = oldPosts
     }
 }
