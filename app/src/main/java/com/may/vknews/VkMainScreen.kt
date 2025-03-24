@@ -1,99 +1,65 @@
 package com.may.vknews
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SwipeToDismissBox
-import androidx.compose.material3.SwipeToDismissBoxValue
-import androidx.compose.material3.rememberSwipeToDismissBoxState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import com.may.vknews.domain.Post
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.may.vknews.navigation.AppNavGraph
+import com.may.vknews.navigation.NavigationState
+import com.may.vknews.navigation.rememberNavigationState
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
     viewModel: MainViewModel
 ) {
-    Scaffold(
-        bottomBar = {
-            BottomBar()
-        }
-    ) {
-        val posts = viewModel.posts.observeAsState(listOf())
 
+    val navigationState = rememberNavigationState()
 
-        LazyColumn(
-            modifier = Modifier.padding(it)
-        ) {
-            items(
-                items = posts.value,
-                key = { it.id }
-            ) { post ->
-                val dismissState = rememberSwipeToDismissBoxState()
-                SwipeToDismissBox(
-                    modifier = Modifier.animateItemPlacement(),
-                    state = dismissState,
-                    backgroundContent = {  },
-                    enableDismissFromEndToStart = true,
-                    enableDismissFromStartToEnd = false
-                ) {
-                    if (dismissState.currentValue == SwipeToDismissBoxValue.EndToStart) {
-                        viewModel.remove(post)
-                    }
-                    CardPost(
-                        post = post,
-                        onViewClickListener = {
-                            viewModel.updateCountStatisticItem(post, it)
-                        },
-                        onShareClickListener = {
-                            viewModel.updateCountStatisticItem(post, it)
-                        },
-                        onCommentClickListener = {
-                            viewModel.updateCountStatisticItem(post, it)
-                        },
-                        onLikeClickListener = {
-                            viewModel.updateCountStatisticItem(post, it)
-                        }
-                    )
-                }
-            }
-        }
+    Scaffold(bottomBar = {
+        BottomBar(navigationState)
+    }) {
 
+        AppNavGraph(
+            navController = navigationState.navHostController,
+            homeContent = { HomeScreen(viewModel = viewModel, paddingValues = it) },
+            favouriteContent = { Text(text = "This is Favourite Screen") },
+            profileContent = { Text(text = "This is Profile Screen") },
+        )
 
     }
 }
 
 @Composable
-fun BottomBar() {
+fun BottomBar(
+    navigationState: NavigationState
+) {
+
+
+
     NavigationBar {
-        val selectedItem = remember {
-            mutableStateOf(0)
-        }
+
+        val navBackStackEntry = navigationState.navHostController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry.value?.destination?.route
+
         val items = listOf(
-            BottomAppBarItem.Home,
-            BottomAppBarItem.Favourite,
-            BottomAppBarItem.Profile
+            BottomAppBarItem.Home, BottomAppBarItem.Favourite, BottomAppBarItem.Profile
         )
 
-        items.forEachIndexed { index, item ->
+        items.forEach { item ->
             NavigationBarItem(
-                selected = selectedItem.value == index,
-                onClick = { selectedItem.value = index },
+                selected = currentRoute == item.screen.route,
+                onClick = { navigationState.navigateTo(item.screen.route) },
                 icon = { Icon(imageVector = item.icon, contentDescription = null) },
-                label = { stringResource(item.labelResId) }
+                label = { Text(text = stringResource(item.labelResId)) },
             )
         }
     }
