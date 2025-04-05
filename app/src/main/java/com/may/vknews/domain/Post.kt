@@ -6,11 +6,11 @@ import androidx.compose.ui.res.stringResource
 import com.may.vknews.R
 
 data class Post(
-    val id: Int,
-    val groupName: Int = R.string.group_name,
+    val id: Int = 0,
+    val groupName: String = "Dogs Club",
     val avatarImageResId: Int = R.drawable.bigel,
     val publicationDate: Int = R.string.time,
-    val contentText: Int = R.string.main_content,
+    val contentText: String = "У меня есть щенок. Его зовут Барбос. Он красивый, добрый и верный. Мы любим бегать по двору и играть. Он спит на коврике в коридоре со своей любимой игрушкой — зайцем. Я люблю его кормить. Барбос кушает специальный корм для собак. Моя собака — самая лучшая, я никому не дам её в обиду. ",
     val contentImageResId: Int = R.drawable.akita_inu,
     val statistics: List<StatisticsItem> = listOf(
         StatisticsItem(type = StatisticType.VIEWS, count = 966),
