@@ -92,7 +92,7 @@ fun HeadContent(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = stringResource(post.groupName),
+                text = post.groupName,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
@@ -123,7 +123,7 @@ fun MainContent(
             .padding(start = 16.dp, end = 16.dp, bottom = 16.dp)
     ) {
         Text(
-            text = stringResource(post.contentText)
+            text = post.contentText
         )
         Spacer(modifier = Modifier.height(16.dp))
         Image(

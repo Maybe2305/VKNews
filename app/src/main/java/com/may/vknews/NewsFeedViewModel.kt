@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.may.vknews.domain.Post
 import com.may.vknews.domain.StatisticsItem
 
-class MainViewModel : ViewModel() {
+class NewsFeedViewModel : ViewModel() {
 
     private val sourceList = mutableListOf<Post>().apply {
         repeat(10) {
@@ -14,11 +14,15 @@ class MainViewModel : ViewModel() {
         }
     }
 
-    private val _posts = MutableLiveData<List<Post>>(sourceList)
-    val posts: LiveData<List<Post>> = _posts
+    val initialState = NewsFeedScreenState.Posts(sourceList)
+
+    private val _screenState = MutableLiveData<NewsFeedScreenState>(initialState)
+    val screenState: LiveData<NewsFeedScreenState> = _screenState
 
     fun updateCountStatisticItem(post: Post, item: StatisticsItem) {
-        val oldPosts = _posts.value?.toMutableList() ?: mutableListOf()
+        val currentState = screenState.value
+        if (currentState !is NewsFeedScreenState.Posts) return
+        val oldPosts = currentState.posts.toMutableList()
         val oldStatistics = post.statistics
         val newStatistics = oldStatistics.toMutableList().apply {
             replaceAll { oldItem ->
@@ -30,7 +34,7 @@ class MainViewModel : ViewModel() {
             }
         }
         val newPost = post.copy(statistics = newStatistics)
-        _posts.value = oldPosts.apply {
+        val newPosts = oldPosts.apply {
             replaceAll {
                 if (it.id == newPost.id) {
                     newPost
@@ -39,11 +43,16 @@ class MainViewModel : ViewModel() {
                 }
             }
         }
+
+        _screenState.value = NewsFeedScreenState.Posts(posts = newPosts)
     }
 
     fun remove(post: Post) {
-        val oldPosts = _posts.value?.toMutableList() ?: mutableListOf()
+        val currentState = screenState.value
+        if (currentState !is NewsFeedScreenState.Posts) return
+
+        val oldPosts = currentState.posts.toMutableList()
         oldPosts.remove(post)
-        _posts.value = oldPosts
+        _screenState.value = NewsFeedScreenState.Posts(posts = oldPosts)
     }
 }

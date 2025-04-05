@@ -1,5 +1,6 @@
 package com.may.vknews
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -12,20 +13,52 @@ import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.may.vknews.domain.Post
+import com.may.vknews.domain.PostComment
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-    viewModel: MainViewModel,
     paddingValues: PaddingValues,
+    onCommentClickListener: (Post) -> Unit
 ) {
-    val posts = viewModel.posts.observeAsState(listOf())
+
+    val viewModel: NewsFeedViewModel = viewModel()
+    val screenState = viewModel.screenState.observeAsState(NewsFeedScreenState.Initial)
+
+    when(val currentScreenState = screenState.value) {
+        is NewsFeedScreenState.Posts -> {
+            PostsScreen(
+                viewModel = viewModel,
+                paddingValues = paddingValues,
+                posts = currentScreenState.posts,
+                onCommentClickListener = onCommentClickListener
+            )
+        }
+
+        NewsFeedScreenState.Initial -> {
+
+        }
+    }
+}
+
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
+@Composable
+fun PostsScreen(
+    viewModel: NewsFeedViewModel,
+    paddingValues: PaddingValues,
+    posts: List<Post>,
+    onCommentClickListener: (Post) -> Unit
+) {
+
 
     LazyColumn(
         modifier = Modifier.padding(paddingValues)
     ) {
         items(
-            items = posts.value,
+            items = posts,
             key = { it.id }
         ) { post ->
             val dismissState = rememberSwipeToDismissBoxState()
@@ -48,7 +81,7 @@ fun HomeScreen(
                         viewModel.updateCountStatisticItem(post, it)
                     },
                     onCommentClickListener = {
-                        viewModel.updateCountStatisticItem(post, it)
+                        onCommentClickListener(post)
                     },
                     onLikeClickListener = {
                         viewModel.updateCountStatisticItem(post, it)
