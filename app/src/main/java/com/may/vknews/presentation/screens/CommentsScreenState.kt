@@ -1,6 +1,6 @@
-package com.may.vknews
+package com.may.vknews.presentation.screens
 
-import com.may.vknews.domain.Post
+import com.may.vknews.domain.FeedPost
 import com.may.vknews.domain.PostComment
 
 sealed class CommentsScreenState {
@@ -8,7 +8,7 @@ sealed class CommentsScreenState {
     object Initial : CommentsScreenState()
 
     data class Comments(
-        val post: Post,
+        val feedPost: FeedPost,
         val comments: List<PostComment>
     ): CommentsScreenState()
 }

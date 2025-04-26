@@ -1,4 +1,4 @@
-package com.may.vknews
+package com.may.vknews.presentation.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -33,7 +33,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.may.vknews.domain.Post
+import com.may.vknews.presentation.viewmodel.CommentsViewModel
+import com.may.vknews.presentation.viewmodel.CommentsViewModelFactory
+import com.may.vknews.domain.FeedPost
 import com.may.vknews.domain.PostComment
 
 
@@ -41,10 +43,10 @@ import com.may.vknews.domain.PostComment
 @Composable
 fun CommentScreen(
     onBackPressed: () -> Unit,
-    post: Post
+    feedPost: FeedPost
 ) {
     val viewModel: CommentsViewModel = viewModel(
-        factory = CommentsViewModelFactory(post)
+        factory = CommentsViewModelFactory(feedPost)
     )
     val screenState = viewModel.screenState.observeAsState(CommentsScreenState.Initial)
     val currentState = screenState.value
@@ -54,7 +56,7 @@ fun CommentScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "Comments for Post ID: ${currentState.post.id}")
+                        Text(text = "Comments for Post ID: ${currentState.feedPost.id}")
                     },
                     navigationIcon = {
                         IconButton(onClick = { onBackPressed() }) {

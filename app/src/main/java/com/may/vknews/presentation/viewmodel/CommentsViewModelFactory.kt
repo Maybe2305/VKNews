@@ -1,15 +1,14 @@
-package com.may.vknews
+package com.may.vknews.presentation.viewmodel
 
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.may.vknews.domain.Post
+import com.may.vknews.domain.FeedPost
 
 class CommentsViewModelFactory(
-    private val post: Post
+    private val feedPost: FeedPost
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return CommentsViewModel(post) as T
+        return CommentsViewModel(feedPost) as T
     }
 }

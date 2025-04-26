@@ -1,10 +1,11 @@
-package com.may.vknews
+package com.may.vknews.domain
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.ui.graphics.vector.ImageVector
+import com.may.vknews.R
 import com.may.vknews.navigation.Screen
 
 sealed class BottomAppBarItem(
