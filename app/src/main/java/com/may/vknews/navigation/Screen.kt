@@ -2,7 +2,7 @@ package com.may.vknews.navigation
 
 import android.net.Uri
 import com.google.gson.Gson
-import com.may.vknews.domain.Post
+import com.may.vknews.domain.FeedPost
 
 sealed class Screen(
     val route: String
@@ -11,12 +11,13 @@ sealed class Screen(
     object FavouriteScreen: Screen(FAVOURITE_ROUTE)
     object ProfileScreen: Screen(PROFILE_ROUTE)
     object HomeScreen: Screen(HOME_ROUTE)
-    object CommentsScreen: Screen(COMMENTS_ROUTE) {
+    object CommentsScreen: Screen(COMMENTS_ROUTE)
+     {
 
         private const val ROUTE_FOR_ARGS = "comments"
 
-        fun getRouteWithArgs(post: Post): String {
-            val postJson = Gson().toJson(post)
+        fun getRouteWithArgs(feedPost: FeedPost): String {
+            val postJson = Gson().toJson(feedPost)
             return "$ROUTE_FOR_ARGS/${postJson.encode()}"
         }
     }

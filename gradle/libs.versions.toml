@@ -1,6 +1,9 @@
 [versions]
 agp = "8.8.0"
-gson = "2.10.1"
+converterGson = "2.11.0"
+desugar_jdk_libs = "2.1.5"
+googleGson = "2.11.0"
+gson = "2.11.0"
 kotlin = "2.0.0"
 coreKtx = "1.15.0"
 junit = "4.13.2"
@@ -10,13 +13,36 @@ lifecycleRuntimeKtx = "2.8.7"
 activityCompose = "1.10.1"
 composeBom = "2024.04.01"
 navigationCompose = "2.8.9"
+onetapCompose = "2.3.1"
 runtimeLivedata = "1.7.8"
+vk_version = "4.1.0"
+sdkVersion = "2.3.1"
+coil_version = "3.0.4"
+okHttpClient_version = "4.12.0"
+retrofit_version = "2.11.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycleRuntimeKtx" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-runtime-livedata = { module = "androidx.compose.runtime:runtime-livedata", version.ref = "runtimeLivedata" }
+
+#Retrofit
+converter-gson = { module = "com.squareup.retrofit2:converter-gson", version.ref = "converterGson" }
+retrofit = {group = "com.squareup.retrofit2", name = "retrofit", version.ref ="retrofit_version"}
+
+#OkHttpClient
+okHttpClient = {group = "com.squareup.okhttp3", name = "okhttp", version.ref ="okHttpClient_version"}
+#HttpLoggingInterceptor
+httpLoggingInterceptor = {group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref ="okHttpClient_version"}
+
+#Coil compose
+coil-compose = {group = "io.coil-kt.coil3", name = "coil-compose", version.ref ="coil_version"}
+#Coil сеть
+coil-network = {group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref ="coil_version"}
+
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libs" }
+#noinspection SimilarGradleDependency
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -31,6 +57,14 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+
+#VK базовая функциональность
+onetap-compose = { module = "com.vk.id:onetap-compose", version.ref = "onetapCompose" }
+vk-core = {group = "com.vk", name = "android-sdk-core", version.ref ="vk_version"}
+#VK сгенерированные модели и методы
+vk-api = {group = "com.vk", name = "android-sdk-api", version.ref ="vk_version"}
+
+vk-id = {group = "com.vk.id", name = "vkid", version.ref = "sdkVersion"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -1,6 +1,5 @@
-package com.may.vknews
+package com.may.vknews.presentation.screens
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -14,30 +13,43 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.may.vknews.domain.Post
-import com.may.vknews.domain.PostComment
+import com.may.vknews.presentation.custom.CardPost
+import com.may.vknews.presentation.viewmodel.NewsFeedViewModel
+import com.may.vknews.domain.FeedPost
+import com.may.vknews.presentation.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun HomeScreen(
+fun NewsFeedScreen(
     paddingValues: PaddingValues,
-    onCommentClickListener: (Post) -> Unit
+    onCommentClickListener: (FeedPost) -> Unit
 ) {
 
-    val viewModel: NewsFeedViewModel = viewModel()
-    val screenState = viewModel.screenState.observeAsState(NewsFeedScreenState.Initial)
+    val viewModelNewsFeed: NewsFeedViewModel = viewModel()
+    val viewModelAuth: MainViewModel = viewModel()
+    val screenState = viewModelNewsFeed.screenState.observeAsState(NewsFeedScreenState.Initial)
 
     when(val currentScreenState = screenState.value) {
         is NewsFeedScreenState.Posts -> {
             PostsScreen(
-                viewModel = viewModel,
+                viewModel = viewModelNewsFeed,
                 paddingValues = paddingValues,
-                posts = currentScreenState.posts,
+                feedPosts = currentScreenState.feedPosts,
                 onCommentClickListener = onCommentClickListener
             )
         }
 
-        NewsFeedScreenState.Initial -> {
+        is NewsFeedScreenState.Error -> {
+
+        }
+
+        is NewsFeedScreenState.LogOut -> {
+            LoginScreen {
+                viewModelAuth.onSuccess()
+            }
+        }
+
+        is NewsFeedScreenState.Initial -> {
 
         }
     }
@@ -49,8 +61,8 @@ fun HomeScreen(
 fun PostsScreen(
     viewModel: NewsFeedViewModel,
     paddingValues: PaddingValues,
-    posts: List<Post>,
-    onCommentClickListener: (Post) -> Unit
+    feedPosts: List<FeedPost>,
+    onCommentClickListener: (FeedPost) -> Unit
 ) {
 
 
@@ -58,7 +70,7 @@ fun PostsScreen(
         modifier = Modifier.padding(paddingValues)
     ) {
         items(
-            items = posts,
+            items = feedPosts,
             key = { it.id }
         ) { post ->
             val dismissState = rememberSwipeToDismissBoxState()
@@ -73,7 +85,7 @@ fun PostsScreen(
                     viewModel.remove(post)
                 }
                 CardPost(
-                    post = post,
+                    feedPost = post,
                     onViewClickListener = {
                         viewModel.updateCountStatisticItem(post, it)
                     },

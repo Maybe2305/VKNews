@@ -16,6 +16,15 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        addManifestPlaceholders(
+            mapOf(
+                "VKIDClientID" to "53458866", // ID вашего приложения (app_id).
+                "VKIDClientSecret" to "SZSjMJhDyfbW2kYFoGWp", // Ваш защищенный ключ (client_secret).
+                "VKIDRedirectHost" to "vk.com", // Обычно используется vk.com.
+                "VKIDRedirectScheme" to "vk53458866", // Обычно используется vk{ID приложения}.
+            )
+        )
     }
 
     buildTypes {
@@ -28,6 +37,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
@@ -44,7 +54,28 @@ dependencies {
     // Jetpack Navigation
     implementation(libs.androidx.navigation.compose)
 
+    // VK API
+    implementation(libs.vk.core)
+    implementation(libs.vk.api)
+    implementation(libs.vk.id)
+    implementation(libs.onetap.compose)
+
+    //Coil compose
+    implementation(libs.coil.compose)
+    //Coil сеть
+    implementation(libs.coil.network)
+
+    //OkHttpClient
+    implementation(libs.okHttpClient)
+    //HttpLoggingInterceptor
+    implementation(libs.httpLoggingInterceptor)
+
+    //Retrofit
+    implementation(libs.retrofit)
+    implementation (libs.converter.gson)
+
     implementation(libs.gson)
+    implementation(libs.coil.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.runtime.livedata)
     implementation(libs.androidx.core.ktx)
@@ -62,4 +93,6 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
 }

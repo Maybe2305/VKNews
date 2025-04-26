@@ -7,11 +7,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.google.gson.Gson
-import com.may.vknews.domain.Post
+import com.may.vknews.domain.FeedPost
 
 fun NavGraphBuilder.homeScreenNavGraph(
     feedPostsContent: @Composable () -> Unit,
-    commentsContent: @Composable (Post) -> Unit,
+    commentsContent: @Composable (FeedPost) -> Unit,
 ) {
     navigation(
         startDestination = Screen.FeedPostsScreen.route,
@@ -30,8 +30,8 @@ fun NavGraphBuilder.homeScreenNavGraph(
             )
         ) {
             val postJson = it.arguments?.getString(Screen.KEY_POST) ?: ""
-            val post = Gson().fromJson(postJson, Post::class.java)
-            commentsContent(post)
+            val feedPost = Gson().fromJson(postJson, FeedPost::class.java)
+            commentsContent(feedPost)
         }
     }
 }

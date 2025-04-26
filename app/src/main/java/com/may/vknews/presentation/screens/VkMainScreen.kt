@@ -1,4 +1,4 @@
-package com.may.vknews
+package com.may.vknews.presentation.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.material3.Icon
@@ -8,16 +8,11 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.may.vknews.domain.Post
+import com.may.vknews.domain.BottomAppBarItem
 import com.may.vknews.navigation.AppNavGraph
 import com.may.vknews.navigation.NavigationState
-import com.may.vknews.navigation.Screen
 import com.may.vknews.navigation.rememberNavigationState
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -33,7 +28,7 @@ fun MainScreen() {
         AppNavGraph(
             navController = navigationState.navHostController,
             feedPostsContent = {
-                HomeScreen(
+                NewsFeedScreen(
                     paddingValues = it,
                     onCommentClickListener = {
                         navigationState.navigateToComments(it)
@@ -45,7 +40,7 @@ fun MainScreen() {
             commentsContent = { post ->
                 CommentScreen(
                     onBackPressed = { navigationState.navHostController.popBackStack() },
-                    post = post
+                    feedPost = post
                 )
             }
         )
