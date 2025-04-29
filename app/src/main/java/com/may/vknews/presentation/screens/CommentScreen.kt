@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -33,6 +34,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil3.compose.AsyncImage
 import com.may.vknews.presentation.viewmodel.CommentsViewModel
 import com.may.vknews.presentation.viewmodel.CommentsViewModelFactory
 import com.may.vknews.domain.FeedPost
@@ -56,7 +58,7 @@ fun CommentScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "Comments for Post ID: ${currentState.feedPost.id}")
+                        Text(text = "Комментарии:")
                     },
                     navigationIcon = {
                         IconButton(onClick = { onBackPressed() }) {
@@ -79,8 +81,8 @@ fun CommentScreen(
                     bottom = 72.dp
                 )
             ) {
-                items(10) {
-                    CommentScreenCard(currentState.comments[0])
+                items(currentState.comments) { comment ->
+                    CommentScreenCard(comment)
                 }
             }
         }
@@ -96,16 +98,18 @@ fun CommentScreenCard(
             .fillMaxWidth()
             .padding(16.dp)
     ) {
-        Image(
-            painter = painterResource(postComment.authorAvatarId),
+        AsyncImage(
+            model = postComment.authorAvatarUrl,
             contentDescription = null,
             modifier = Modifier
                 .size(50.dp)
-                .padding(end = 8.dp)
                 .clip(CircleShape),
             contentScale = ContentScale.Crop
 
         )
+
+        Spacer(Modifier.width(12.dp))
+
         Column(
             horizontalAlignment = Alignment.Start,
             verticalArrangement = Arrangement.SpaceBetween
@@ -114,10 +118,6 @@ fun CommentScreenCard(
                 Text(
                     text = postComment.authorName,
                     fontSize = 12.sp,
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "CommentId: ${postComment.id}"
                 )
             }
 
@@ -136,10 +136,4 @@ fun CommentScreenCard(
         }
 
     }
-}
-
-@Preview
-@Composable
-fun CommentScreenPreview() {
-    CommentScreenCard(PostComment(1))
 }

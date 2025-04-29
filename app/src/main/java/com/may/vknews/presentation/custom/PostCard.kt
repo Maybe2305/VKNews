@@ -1,6 +1,6 @@
 package com.may.vknews.presentation.custom
 
-import androidx.compose.foundation.Image
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +17,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Create
-import androidx.compose.material.icons.outlined.Favorite
 import androidx.compose.material.icons.outlined.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -31,8 +30,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -62,7 +61,8 @@ fun CardPost(
                 onLikeClickListener = onLikeClickListener,
                 onCommentClickListener = onCommentClickListener,
                 onShareClickListener = onShareClickListener,
-                onViewClickListener = onViewClickListener
+                onViewClickListener = onViewClickListener,
+                isFavourite = feedPost.isLiked
             )
         }
     }
@@ -92,14 +92,14 @@ fun HeadContent(
             modifier = Modifier.weight(1f)
         ) {
             Text(
-                text = feedPost.groupName,
+                text = feedPost.communityName,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = feedPost.publicationDate,
-                color = Color.LightGray
+                color = Color.Gray
             )
         }
         IconButton(
@@ -128,7 +128,9 @@ fun MainContent(
         Spacer(modifier = Modifier.height(16.dp))
         AsyncImage(
             model = feedPost.contentImageUrl,
-            modifier = Modifier.fillMaxWidth().wrapContentHeight(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight(),
             contentDescription = stringResource(R.string.image_akita_inu),
             contentScale = ContentScale.Crop
         )
@@ -141,7 +143,8 @@ fun BottomContent(
     onViewClickListener: (StatisticsItem) -> Unit,
     onLikeClickListener: (StatisticsItem) -> Unit,
     onShareClickListener: (StatisticsItem) -> Unit,
-    onCommentClickListener: (StatisticsItem) -> Unit
+    onCommentClickListener: (StatisticsItem) -> Unit,
+    isFavourite: Boolean,
 ) {
     Row(
         modifier = Modifier
@@ -160,7 +163,7 @@ fun BottomContent(
                 onItemClickListener = { onViewClickListener(viewsItem) }
             )
         }
-        
+
         Row(
             modifier = Modifier.weight(1f),
             horizontalArrangement = Arrangement.SpaceBetween
@@ -186,11 +189,27 @@ fun BottomContent(
             val likesItem = statistics.getItemByType(StatisticType.LIKES)
             TextAndIcon(
                 text = likesItem.count.toString(),
-                icon = Icons.Outlined.Favorite,
-                onItemClickListener = { onLikeClickListener(likesItem) }
+                icon = if (isFavourite) {
+                    ImageVector.vectorResource(R.drawable.liked_svg)
+                } else {
+                    ImageVector.vectorResource(R.drawable.unliked_svg)
+                },
+                onItemClickListener = { onLikeClickListener(likesItem) },
+                tint = if (isFavourite) Color.Red else Color.Gray
             )
         }
 
+    }
+}
+
+@SuppressLint("DefaultLocale")
+private fun formatStatisticCount(count: Int): String {
+    return if (count > 100_000) {
+        String.format("%sK", (count / 1000))
+    } else if (count > 1000) {
+        String.format("%.1fK", (count / 1000f))
+    } else {
+        count.toString()
     }
 }
 
@@ -203,15 +222,21 @@ fun TextAndIcon(
     text: String,
     icon: ImageVector,
     onItemClickListener: () -> Unit,
+    tint: Color = Color.Gray
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .clickable { onItemClickListener() }
     ) {
-        Text(text)
+        Text(text = formatStatisticCount(text.toInt()))
         Spacer(modifier = Modifier.width(2.dp))
-        Icon(imageVector = icon, contentDescription = stringResource(R.string.image))
+        Icon(
+            modifier = Modifier.size(25.dp),
+            imageVector = icon,
+            contentDescription = stringResource(R.string.image),
+            tint = tint
+        )
     }
 }
 
