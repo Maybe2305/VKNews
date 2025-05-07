@@ -10,17 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,19 +26,21 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.may.vknews.presentation.custom.CardPost
 import com.may.vknews.presentation.viewmodel.NewsFeedViewModel
-import com.may.vknews.domain.FeedPost
+import com.may.vknews.domain.entity.FeedPost
+import com.may.vknews.presentation.ViewModelFactory
 import com.may.vknews.presentation.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun NewsFeedScreen(
+    viewModelFactory: ViewModelFactory,
     paddingValues: PaddingValues,
     onCommentClickListener: (FeedPost) -> Unit
 ) {
 
-    val viewModelNewsFeed: NewsFeedViewModel = viewModel()
-    val viewModelAuth: MainViewModel = viewModel()
-    val screenState = viewModelNewsFeed.screenState.observeAsState(NewsFeedScreenState.Initial)
+    val viewModelNewsFeed: NewsFeedViewModel = viewModel(factory = viewModelFactory)
+    val viewModelAuth: MainViewModel = viewModel(factory = viewModelFactory)
+    val screenState = viewModelNewsFeed.screenState.collectAsState(NewsFeedScreenState.Initial)
 
 
     when(val currentScreenState = screenState.value) {

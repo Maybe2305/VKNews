@@ -1,10 +1,12 @@
 [versions]
 agp = "8.8.0"
 converterGson = "2.11.0"
+dagger2_version = "2.55"
 desugar_jdk_libs = "2.1.5"
 googleGson = "2.11.0"
 gson = "2.11.0"
-kotlin = "2.0.0"
+kotlin = "2.1.10"
+ksp_version ="2.1.10-1.0.29"
 coreKtx = "1.15.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
@@ -58,6 +60,13 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 
+#Dagger2
+dagger2 = { group = "com.google.dagger", name = "dagger", version.ref = "dagger2_version" }
+#Dagger2 кодогенратор
+dagger2-compiler = { group = "com.google.dagger", name = "dagger-compiler", version.ref = "dagger2_version" }
+#Dagger2 аннотации
+dagger2-android-processor = { group = "com.google.dagger", name = "dagger-android-processor", version.ref = "dagger2_version" }
+
 #VK базовая функциональность
 onetap-compose = { module = "com.vk.id:onetap-compose", version.ref = "onetapCompose" }
 vk-core = {group = "com.vk", name = "android-sdk-core", version.ref ="vk_version"}
@@ -70,4 +79,6 @@ vk-id = {group = "com.vk.id", name = "vkid", version.ref = "sdkVersion"}
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+#ksp
+ksp = {id = "com.google.devtools.ksp", version.ref ="ksp_version"}
 

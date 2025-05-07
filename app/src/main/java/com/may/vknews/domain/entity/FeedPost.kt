@@ -1,6 +1,8 @@
-package com.may.vknews.domain
+package com.may.vknews.domain.entity
 
-data class FeedPost(
+import javax.inject.Inject
+
+data class FeedPost @Inject constructor(
     val id: Long,
     val communityName: String,
     val communityId: Long,

@@ -1,17 +1,19 @@
 package com.may.vknews.data.mapper
 
+import android.annotation.SuppressLint
 import com.may.vknews.data.model.CommentsResponseDto
 import com.may.vknews.data.model.NewsFeedResponseDto
-import com.may.vknews.domain.FeedPost
-import com.may.vknews.domain.PostComment
-import com.may.vknews.domain.StatisticType
-import com.may.vknews.domain.StatisticsItem
+import com.may.vknews.domain.entity.FeedPost
+import com.may.vknews.domain.entity.PostComment
+import com.may.vknews.domain.entity.StatisticType
+import com.may.vknews.domain.entity.StatisticsItem
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 import kotlin.math.absoluteValue
 
-class NewsFeedMapper {
+class NewsFeedMapper @Inject constructor() {
 
     fun mapResponseToPosts(responseDto: NewsFeedResponseDto): List<FeedPost> {
         val result = mutableListOf<FeedPost>()
@@ -42,6 +44,7 @@ class NewsFeedMapper {
         return result
     }
 
+    @SuppressLint("SuspiciousIndentation")
     fun mapResponseToComments(response: CommentsResponseDto): List<PostComment> {
         val result = mutableListOf<PostComment>()
         val comments = response.content.comments

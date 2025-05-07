@@ -1,58 +1,67 @@
 package com.may.vknews.presentation.viewmodel
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.may.vknews.data.repository.NewsFeedRepository
-import com.may.vknews.domain.FeedPost
-import com.may.vknews.domain.StatisticsItem
+import com.may.extensions.mergeWith
+import com.may.vknews.data.repository.NewsFeedRepositoryImpl
+import com.may.vknews.domain.entity.FeedPost
+import com.may.vknews.domain.usecases.ChangeLikeStatusUseCase
+import com.may.vknews.domain.usecases.DeletePostUseCase
+import com.may.vknews.domain.usecases.GetPostsUseCase
+import com.may.vknews.domain.usecases.LoadNextDataUseCase
 import com.may.vknews.presentation.screens.NewsFeedScreenState
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class NewsFeedViewModel : ViewModel() {
+class NewsFeedViewModel @Inject constructor(
+    private val getPostsUseCase: GetPostsUseCase,
+    private val loadNextDataUseCase: LoadNextDataUseCase,
+    private val changeLikeStatusUseCase: ChangeLikeStatusUseCase,
+    private val deletePostUseCase: DeletePostUseCase,
+) : ViewModel() {
 
-    val initialState = NewsFeedScreenState.Initial
-
-    private val _screenState = MutableLiveData<NewsFeedScreenState>(initialState)
-    val screenState: LiveData<NewsFeedScreenState> = _screenState
-
-    private val repository = NewsFeedRepository()
-
-    init {
-        _screenState.value = NewsFeedScreenState.Loading
-        loadPosts()
+    private val exceptionHandler = CoroutineExceptionHandler { _, _ ->
+        Log.d("NewsFeedViewModel", "Exception caught by exceptionHandler")
     }
 
-    private fun loadPosts() {
+    private val postsFlow = getPostsUseCase()
+
+    private val loadNextDataFlow = MutableSharedFlow<NewsFeedScreenState>()
+
+    val screenState = postsFlow
+        .filter { it.isNotEmpty() }
+        .map { NewsFeedScreenState.Posts(feedPosts = it) as NewsFeedScreenState }
+        .onStart { emit(NewsFeedScreenState.Loading) }
+        .mergeWith(loadNextDataFlow)
+
+
+    fun loadNextPosts() {
         viewModelScope.launch {
-            val feedPosts = repository.loadPosts()
-            _screenState.value = NewsFeedScreenState.Posts(feedPosts = feedPosts)
+            loadNextDataFlow.emit(
+                NewsFeedScreenState.Posts(
+                    feedPosts = postsFlow.value,
+                    nextDataIsLoading = true,
+                )
+            )
+            loadNextDataUseCase()
         }
     }
 
-    fun loadNextPosts() {
-        Log.d("MyLog", "Подгружаем новые посты...")
-        _screenState.value = NewsFeedScreenState.Posts(
-            feedPosts = repository.feedPosts,
-            nextDataIsLoading = true
-        )
-        loadPosts()
-    }
-
     fun changeLikeStatus(feedPost: FeedPost) {
-        viewModelScope.launch {
-            repository.changeLikeStatus(feedPost)
-            _screenState.value = NewsFeedScreenState.Posts(feedPosts = repository.feedPosts)
+        viewModelScope.launch(exceptionHandler) {
+            changeLikeStatusUseCase(feedPost)
         }
     }
 
     fun remove(feedPost: FeedPost) {
-        viewModelScope.launch {
-            repository.deletePost(feedPost)
-            _screenState.value = NewsFeedScreenState.Posts(feedPosts = repository.feedPosts)
+        viewModelScope.launch(exceptionHandler) {
+            deletePostUseCase(feedPost)
         }
     }
 }
