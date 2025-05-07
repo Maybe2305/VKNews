@@ -1,6 +1,4 @@
-package com.may.vknews.presentation.screens
-
-import com.vk.id.AccessToken
+package com.may.vknews.domain.entity
 
 sealed class AuthState {
 

@@ -37,9 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.may.vknews.R
-import com.may.vknews.domain.FeedPost
-import com.may.vknews.domain.StatisticType
-import com.may.vknews.domain.StatisticsItem
+import com.may.vknews.domain.entity.FeedPost
+import com.may.vknews.domain.entity.StatisticType
+import com.may.vknews.domain.entity.StatisticsItem
 
 @Composable
 fun CardPost(

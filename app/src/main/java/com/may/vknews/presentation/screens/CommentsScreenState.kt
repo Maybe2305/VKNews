@@ -1,7 +1,7 @@
 package com.may.vknews.presentation.screens
 
-import com.may.vknews.domain.FeedPost
-import com.may.vknews.domain.PostComment
+import com.may.vknews.domain.entity.FeedPost
+import com.may.vknews.domain.entity.PostComment
 
 sealed class CommentsScreenState {
 

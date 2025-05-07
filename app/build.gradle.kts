@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -73,6 +74,13 @@ dependencies {
     //Retrofit
     implementation(libs.retrofit)
     implementation (libs.converter.gson)
+
+    //Dagger2
+    implementation(libs.dagger2)
+    //Dagger2 кодогенератор
+    ksp(libs.dagger2.compiler)
+    //Dagger2 аннотации
+    ksp(libs.dagger2.android.processor)
 
     implementation(libs.gson)
     implementation(libs.coil.compose)

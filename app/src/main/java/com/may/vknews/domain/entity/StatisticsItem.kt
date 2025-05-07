@@ -1,4 +1,4 @@
-package com.may.vknews.domain
+package com.may.vknews.domain.entity
 
 data class StatisticsItem(
     val type: StatisticType,
