@@ -17,6 +17,7 @@ import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,25 +29,42 @@ import com.may.vknews.presentation.custom.CardPost
 import com.may.vknews.presentation.viewmodel.NewsFeedViewModel
 import com.may.vknews.domain.entity.FeedPost
 import com.may.vknews.presentation.ViewModelFactory
+import com.may.vknews.presentation.getApplicationComponent
 import com.may.vknews.presentation.viewmodel.MainViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun NewsFeedScreen(
-    viewModelFactory: ViewModelFactory,
     paddingValues: PaddingValues,
     onCommentClickListener: (FeedPost) -> Unit
 ) {
 
-    val viewModelNewsFeed: NewsFeedViewModel = viewModel(factory = viewModelFactory)
-    val viewModelAuth: MainViewModel = viewModel(factory = viewModelFactory)
+    val component = getApplicationComponent()
+    val viewModelNewsFeed: NewsFeedViewModel = viewModel(factory = component.getViewModelFactory())
+    val viewModelAuth: MainViewModel = viewModel(factory = component.getViewModelFactory())
     val screenState = viewModelNewsFeed.screenState.collectAsState(NewsFeedScreenState.Initial)
 
+    NewsFeedScreenContent(
+        screenState = screenState,
+        paddingValues = paddingValues,
+        onCommentClickListener = onCommentClickListener,
+        viewModel = viewModelNewsFeed,
+        viewModelAuth = viewModelAuth
+    )
+}
 
+@Composable
+fun NewsFeedScreenContent(
+    screenState: State<NewsFeedScreenState>,
+    paddingValues: PaddingValues,
+    onCommentClickListener: (FeedPost) -> Unit,
+    viewModel: NewsFeedViewModel,
+    viewModelAuth: MainViewModel
+) {
     when(val currentScreenState = screenState.value) {
         is NewsFeedScreenState.Posts -> {
             PostsScreen(
-                viewModel = viewModelNewsFeed,
+                viewModel = viewModel,
                 paddingValues = paddingValues,
                 feedPosts = currentScreenState.feedPosts,
                 onCommentClickListener = onCommentClickListener,

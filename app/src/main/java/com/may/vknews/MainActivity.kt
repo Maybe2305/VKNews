@@ -9,6 +9,7 @@ import com.may.vknews.ui.theme.VKNewsTheme
 import com.may.vknews.domain.entity.AuthState
 import com.may.vknews.presentation.NewsFeedApplication
 import com.may.vknews.presentation.ViewModelFactory
+import com.may.vknews.presentation.getApplicationComponent
 import com.may.vknews.presentation.screens.LoginScreen
 import com.may.vknews.presentation.screens.MainScreen
 import com.may.vknews.presentation.viewmodel.MainViewModel
@@ -17,24 +18,17 @@ import javax.inject.Inject
 
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
-    private val component by lazy {
-        (application as NewsFeedApplication).component
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
 
         VKID.init(this)
-        component.inject(this)
 
         super.onCreate(savedInstanceState)
         setContent {
-            VKNewsTheme {
-                val viewModel: MainViewModel = viewModel(factory = viewModelFactory)
-                val authState = viewModel.authState.collectAsState(AuthState.Initial)
+            val component = getApplicationComponent()
+            val viewModel: MainViewModel = viewModel(factory = component.getViewModelFactory())
+            val authState = viewModel.authState.collectAsState(AuthState.Initial)
 
+            VKNewsTheme {
                 when(authState.value) {
                     is AuthState.Initial -> {}
                     is AuthState.NotAuthorized -> {
@@ -43,7 +37,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     is AuthState.Authorized -> {
-                        MainScreen(viewModelFactory = viewModelFactory)
+                        MainScreen()
                     }
                 }
             }

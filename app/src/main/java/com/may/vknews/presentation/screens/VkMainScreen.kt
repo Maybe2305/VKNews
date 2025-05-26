@@ -18,7 +18,7 @@ import com.may.vknews.presentation.ViewModelFactory
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(viewModelFactory: ViewModelFactory) {
+fun MainScreen() {
 
     val navigationState = rememberNavigationState()
 
@@ -30,7 +30,6 @@ fun MainScreen(viewModelFactory: ViewModelFactory) {
             navController = navigationState.navHostController,
             feedPostsContent = {
                 NewsFeedScreen(
-                    viewModelFactory = viewModelFactory,
                     paddingValues = it,
                     onCommentClickListener = {
                         navigationState.navigateToComments(it)

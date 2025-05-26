@@ -1,7 +1,9 @@
 package com.may.vknews.domain.entity
 
+import androidx.compose.runtime.Immutable
 import javax.inject.Inject
 
+@Immutable
 data class FeedPost @Inject constructor(
     val id: Long,
     val communityName: String,

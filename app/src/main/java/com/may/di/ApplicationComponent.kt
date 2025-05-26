@@ -3,6 +3,7 @@ package com.may.di
 import android.content.Context
 import com.may.vknews.MainActivity
 import com.may.vknews.domain.entity.FeedPost
+import com.may.vknews.presentation.ViewModelFactory
 import dagger.BindsInstance
 import dagger.Component
 
@@ -15,7 +16,7 @@ import dagger.Component
 )
 interface ApplicationComponent {
 
-    fun inject(mainActivity: MainActivity)
+    fun getViewModelFactory(): ViewModelFactory
 
     fun getCommentsScreenComponentFactory(): CommentsScreenComponent.Factory
 

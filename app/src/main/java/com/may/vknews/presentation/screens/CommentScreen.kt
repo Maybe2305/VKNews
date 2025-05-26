@@ -22,6 +22,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ import com.may.vknews.domain.entity.FeedPost
 import com.may.vknews.domain.entity.PostComment
 import com.may.vknews.presentation.NewsFeedApplication
 import com.may.vknews.presentation.ViewModelFactory
+import com.may.vknews.presentation.getApplicationComponent
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,8 +49,7 @@ fun CommentScreen(
     feedPost: FeedPost
 ) {
 
-    val component = (LocalContext.current.applicationContext as NewsFeedApplication)
-        .component
+    val component = getApplicationComponent()
         .getCommentsScreenComponentFactory()
         .create(feedPost)
 
@@ -56,6 +57,20 @@ fun CommentScreen(
         factory = component.getViewModelFactory()
     )
     val screenState = viewModel.screenState.collectAsState(CommentsScreenState.Initial)
+
+    CommentsScreenContent(
+        screenState = screenState,
+        onBackPressed = onBackPressed
+    )
+
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CommentsScreenContent(
+    screenState: State<CommentsScreenState>,
+    onBackPressed: () -> Unit,
+) {
     val currentState = screenState.value
 
     if (currentState is CommentsScreenState.Comments) {
